@@ -10,5 +10,5 @@ public interface ProductRepository extends JpaRepository <Product, Integer>{
     Product findByProductCode (int productCode);
     boolean existsByProductCode (int productCode);
 
-    Page <Product> findByType (String type, PageRequest pageRequest);
+    Page <Product> findByProductType (String productType, PageRequest pageRequest);
 }

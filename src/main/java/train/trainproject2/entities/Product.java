@@ -31,15 +31,15 @@ public class Product {
     @Column (name = "product_avqnt")
     private int productAvQnt;
 
-    @Column (name = "price", nullable = false)
+    @Column (name = "product_price", nullable = false)
     private double productPrice;
 
-    @Column (name = "type")
-    private String type;
+    @Column (name = "product_type")
+    private String productType;
 
     @Version
-    @Column (name = "version")
-    private Long version;
+    @Column (name = "product_version")
+    private Long productVersion;
 
     /*Relazione inversa Product e ProductInCart:
     @OneToMany

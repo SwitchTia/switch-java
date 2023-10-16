@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import train.trainproject2.UTILITIES.configurations.AuthenticationRequest;
 import train.trainproject2.UTILITIES.configurations.RegisterRequest;
-import train.trainproject2.entities.Users;
 import train.trainproject2.repositories.UserRepository;
 import train.trainproject2.services.JwtService;
 import train.trainproject2.services.UserService;
@@ -66,8 +65,9 @@ public class UserController {
 
     @DeleteMapping ("/deleteUser")
     @PreAuthorize ("hasAuthority('ADMIN')")
-    public ResponseEntity deleteUser (@RequestParam ("email") String email) {
+    public ResponseEntity deleteUser (HttpServletRequest servletRequest) {
         try {
+            String email =jwtService.extractEmailFromRequest(servletRequest);
             return new ResponseEntity (us.deleteUser(email), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
@@ -77,8 +77,9 @@ public class UserController {
     
     @GetMapping ("/getUser")
     @PreAuthorize ("hasAuthority('ADMIN')")
-    public ResponseEntity getUser (@RequestParam ("email") String email) {
+    public ResponseEntity getUser (HttpServletRequest servletRequest) {
         try {
+            String email =jwtService.extractEmailFromRequest(servletRequest);
             return new ResponseEntity (us.getUser (email), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
@@ -94,8 +95,9 @@ public class UserController {
 
     @PutMapping ("/modifyUser")
     @PreAuthorize ("hasAuthority('ADMIN')")
-    public ResponseEntity modifyUser (@RequestParam ("email") String email, @RequestParam ("firstname") String firstname, @RequestParam ("lastname") String lastname){
+    public ResponseEntity modifyUser (HttpServletRequest servletRequest, @RequestParam ("firstname") String firstname, @RequestParam ("lastname") String lastname){
         try {
+            String email =jwtService.extractEmailFromRequest(servletRequest);
             return new ResponseEntity (us.modifyUser (email, firstname, lastname), HttpStatus.OK);
         } catch (RuntimeException e) {
              String ex = e.getClass().getSimpleName();
@@ -105,8 +107,9 @@ public class UserController {
 
     @PutMapping ("/modifyUserEmail")
     @PreAuthorize ("hasAuthority('ADMIN')")
-    public ResponseEntity modifyUserEmail (@RequestParam ("email") String email, @RequestParam ("newEmail") String newEmail){
+    public ResponseEntity modifyUserEmail (HttpServletRequest servletRequest, @RequestParam ("newEmail") String newEmail){
         try {
+            String email =jwtService.extractEmailFromRequest(servletRequest);
             return new ResponseEntity (us.modifyUserEmail (email, newEmail), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
@@ -127,7 +130,7 @@ public class UserController {
     }
 
     @PostMapping ("/addProdInCart")
-    @PreAuthorize ("hasAuthority('USER')")
+    @PreAuthorize ("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity addProdInCart (HttpServletRequest servletRequest, @RequestParam ("productCode")int productCode, @RequestParam ("inCartQnt")int inCartQnt){
         try {
             String email =jwtService.extractEmailFromRequest(servletRequest);
@@ -140,9 +143,10 @@ public class UserController {
 
     @DeleteMapping ("/decreaseQntProdInCart")
     @PreAuthorize ("hasAnyAuthority('ADMIN','USER')")
-    public ResponseEntity decreaseQntProdInCart (@RequestParam ("email") String email, @RequestParam ("productCode")int productCode, @RequestParam ("inCartQnt")int inCartQnt){
+    public ResponseEntity decreaseQntProdInCart (HttpServletRequest servletRequest, @RequestParam ("productCode")int productCode, @RequestParam ("inCartQnt")int inCartQnt){
             try {
-            return new ResponseEntity (us.decreaseQntProdInCart(email, productCode, inCartQnt), HttpStatus.OK);
+                String email =jwtService.extractEmailFromRequest(servletRequest);
+                return new ResponseEntity (us.decreaseQntProdInCart(email, productCode, inCartQnt), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
             return new ResponseEntity(ex, HttpStatus.BAD_REQUEST);
@@ -151,8 +155,9 @@ public class UserController {
 
     @DeleteMapping ("/deleteProdInCart")
     @PreAuthorize ("hasAnyAuthority('ADMIN','USER')")
-    public ResponseEntity deleteProdInCart (@RequestParam ("email") String email, @RequestParam ("productCode")int productCode){
+    public ResponseEntity deleteProdInCart (HttpServletRequest servletRequest, @RequestParam ("productCode")int productCode){
         try {
+            String email =jwtService.extractEmailFromRequest(servletRequest);
             return new ResponseEntity (us.deleteProdInCart(email, productCode ), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
@@ -162,8 +167,9 @@ public class UserController {
 
     @GetMapping ("/purchasedProd")
     @PreAuthorize ("hasAnyAuthority('ADMIN','USER')")
-    public ResponseEntity purchasedProd(@RequestParam ("email") String email, @RequestParam ("productCode") Integer productCode, @RequestParam ("purchasedQnt")int purchasedQnt) {
+    public ResponseEntity purchasedProd(HttpServletRequest servletRequest, @RequestParam ("productCode") Integer productCode, @RequestParam ("purchasedQnt")int purchasedQnt) {
         try {
+            String email =jwtService.extractEmailFromRequest(servletRequest);
             return new ResponseEntity (us.purchasedProd (email, productCode, purchasedQnt), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
@@ -173,9 +179,10 @@ public class UserController {
 
     @DeleteMapping ("/emptyTheCart")
     @PreAuthorize ("hasAnyAuthority('ADMIN','USER')")
-    public ResponseEntity emptyTheCart (@RequestParam ("email") String email){
+    public ResponseEntity emptyTheCart (HttpServletRequest servletRequest){
             try {
-            return new ResponseEntity (us.emptyTheCart(email), HttpStatus.OK);
+                String email =jwtService.extractEmailFromRequest(servletRequest);
+                return new ResponseEntity (us.emptyTheCart(email), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
             return new ResponseEntity(ex, HttpStatus.BAD_REQUEST);

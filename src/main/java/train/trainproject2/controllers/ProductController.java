@@ -69,9 +69,9 @@ public class ProductController {
 
     @PutMapping ("/modifyProduct")
     @PreAuthorize ("hasAuthority ('ADMIN')")
-    public ResponseEntity modifyProduct (@RequestParam ("productName") String productName, @RequestParam ("productCode") int productCode, @RequestParam ("productAvQnt") int productAvQnt, @RequestParam ("productPrice") double productPrice) {
+    public ResponseEntity modifyProduct (@RequestParam ("productName") String productName, @RequestParam ("productCode") int productCode, @RequestParam ("productAvQnt") int productAvQnt, @RequestParam ("productPrice") double productPrice, @RequestParam ("productType") String productType) {
         try {
-            return new ResponseEntity (ps.modifyProduct (productName, productCode, productAvQnt, productPrice), HttpStatus.OK);
+            return new ResponseEntity (ps.modifyProduct (productName, productCode, productAvQnt, productPrice, productType), HttpStatus.OK);
         } catch (RuntimeException e) {
             String ex = e.getClass().getSimpleName();
             return new ResponseEntity (ex, HttpStatus.BAD_REQUEST);
@@ -90,9 +90,9 @@ public class ProductController {
     }
 
     @GetMapping ("/findByType")
-    @PreAuthorize ("hasAnyAuthority ('USER','ADMIN')")
-    public Page <Product> findByType (@RequestParam ("type") String type, @RequestParam ("pageNr") int pageNr, @RequestParam ("pageSize") int pageSize, @RequestParam ("sortDirection") String sortDirection){
-        return ps.findByType (type, pageNr, pageSize, sortDirection);
+    @PreAuthorize ("hasAuthority ('ADMIN')")
+    public Page <Product> findByProductType (@RequestParam ("productType") String productType, @RequestParam ("pageNr") int pageNr, @RequestParam ("pageSize") int pageSize, @RequestParam ("sortDirection") String sortDirection){
+        return ps.findByType (productType, pageNr, pageSize, sortDirection);
     }
     
 }

@@ -39,7 +39,7 @@ public class ProductService {
         return pr.findByProductCode(productCode);
     }
 
-    public Product modifyProduct (String productName, int productCode, int productQnt, double productPrice) throws RuntimeException {
+    public Product modifyProduct (String productName, int productCode, int productQnt, double productPrice, String productType) throws RuntimeException {
         Product p = pr.findByProductCode(productCode);
         if (p == null){
             throw new ProductDoesNotExistException();
@@ -47,6 +47,7 @@ public class ProductService {
         p.setProductName (productName);
         p.setProductAvQnt (productQnt);
         p.setProductPrice (productPrice);
+        p.setProductType (productType);
         pr.save (p);
         return p;
     }
@@ -61,7 +62,7 @@ public class ProductService {
         return p;
     }
 
-    public Page<Product> findByType (String type, int pageNr, int pageSize, String sortDirection) {
+    public Page<Product> findByType (String productType, int pageNr, int pageSize, String sortDirection) {
         Sort sort;
         if ("desc".equalsIgnoreCase(sortDirection)) {
             sort = Sort.by(Sort.Order.desc("productPrice"));
@@ -69,7 +70,7 @@ public class ProductService {
             sort = Sort.by(Sort.Order.asc("productPrice"));
         }
         PageRequest pageReq = PageRequest.of(pageNr, pageSize, sort);
-        return pr.findByType (type, pageReq);
+        return pr.findByProductType (productType, pageReq);
     }
     
 } 
